@@ -6,14 +6,11 @@ import AppNavbar from './AppNavbar';
 class TFGEdit extends Component {
 
     emptyItem = {
-        nombre: '',
+        id: '',
         email: '',
-        titulo: '',
-        tutor: '',
-        pass: '',
-        status: 1,
-        memoria: null,
-        nota: 0
+        contraseña: '',
+        positivo: false,
+        contactos: []
     };
 
     constructor(props) {
@@ -26,9 +23,9 @@ class TFGEdit extends Component {
     }
 
     async componentDidMount() {
-        if (this.props.match.params.email !== 'new') { // 
-            const tfg = await (await fetch(`/tfgs/${this.props.match.params.email}`)).json();
-            this.setState({item: tfg});
+        if (this.props.match.params.id !== 'new') { // 
+            const usuario = await (await fetch(`/usuarios/${this.props.match.params.id}`)).json();
+            this.setState({item: usuario});
         }
     }
 
@@ -45,20 +42,20 @@ async handleSubmit(event) {
     event.preventDefault();
     const {item} = this.state;
 
-    await fetch('/tfgs' + ((this.props.match.params.email !== 'new') ? '/' + item.email : ''), {
-        method: (this.props.match.params.email !== 'new') ? 'PUT' : 'POST', //(item.email) ? 'PUT' : 'POST',
+    await fetch('/usuarios' + ((this.props.match.params.id !== 'new') ? '/' + item.id : ''), {
+        method: (this.props.match.params.id !== 'new') ? 'PUT' : 'POST', //(item.email) ? 'PUT' : 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(item),
     });
-    this.props.history.push('/tfgs');
+    this.props.history.push('/usuarios');
 }
 
     render() {
         const {item} = this.state;
-        const title = <h2>{item.email ? 'Edit TFG' : 'Add TFG'}</h2>;
+        const title = <h2>{item.id ? 'Edit user' : 'Add user'}</h2>;
 
         return <div>
             <AppNavbar/>
@@ -66,9 +63,9 @@ async handleSubmit(event) {
                 {title}
                 <Form onSubmit={this.handleSubmit}>
                     <FormGroup>
-                        <Label for="nombre">Nombre</Label>
-                        <Input type="text" name="nombre" id="nombre" value={item.nombre || ''}
-                               onChange={this.handleChange} autoComplete="nombre"/>
+                        <Label for="id">Id</Label>
+                        <Input type="text" name="id" id="id" value={item.id || ''}
+                               onChange={this.handleChange} autoComplete="id"/>
                     </FormGroup>
                     <FormGroup>
                         <Label for="email">Email</Label>
@@ -76,24 +73,24 @@ async handleSubmit(event) {
                                onChange={this.handleChange} autoComplete="email"/>
                     </FormGroup>
                     <FormGroup>
-                        <Label for="titulo">Titulo</Label>
-                        <Input type="text" name="titulo" id="titulo" value={item.titulo || ''}
-                               onChange={this.handleChange} autoComplete="titulo"/>
+                        <Label for="contraseña">Contraseña</Label>
+                        <Input type="text" name="contraseña" id="contraseña" value={item.contraseña || ''}
+                               onChange={this.handleChange} autoComplete="contraseña"/>
                     </FormGroup>
                     <FormGroup>
-                        <Label for="tutor">Tutor</Label>
-                        <Input type="text" name="tutor" id="tutor" value={item.tutor || ''}
-                               onChange={this.handleChange} autoComplete="tutor"/>
+                        <Label for="positivo">Positivo</Label>
+                        <Input type="text" name="positivo" id="positivo" value={item.positivo || ''}
+                               onChange={this.handleChange} autoComplete="positivo"/>
                     </FormGroup>
                     <FormGroup>
-                        <Label for="status">Status</Label>
-                        <Input type="number" name="status" id="status" value={item.status || ''}
-                               onChange={this.handleChange} autoComplete="status"/>
+                        <Label for="contactos">Contactos</Label>
+                        <Input type="text" name="contactos" id="contactos" value={item.contactos || ''}
+                               onChange={this.handleChange} autoComplete="contactos"/>
                     </FormGroup>
 
                     <FormGroup>
-                        <Button color="primary" type="submit">Save</Button>{' '}
-                        <Button color="secondary" tag={Link} to="/tfgs">Cancel</Button>
+                        <Button color="primary" type="submit">Guardar</Button>{' '}
+                        <Button color="secondary" tag={Link} to="/usuarios">Cancel</Button>
                     </FormGroup>
                 </Form>
             </Container>

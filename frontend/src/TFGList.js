@@ -7,43 +7,42 @@ class TFGList extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {tfgs: []};
+        this.state = {usuarios: []};
         this.remove = this.remove.bind(this);
     }
 
     componentDidMount() {
-        fetch('/tfgs')
+        fetch('/usuarios')
             .then(response => response.json())
-            .then(data => this.setState({tfgs: data}));
+            .then(data => this.setState({usuarios: data}));
     }
 
-    async remove(email) {
-        await fetch(`/tfgs/${email}`, {
+    async remove(id) {
+        await fetch(`/usuarios/${id}`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }
         }).then(() => {
-            let updatedTFGs = [...this.state.tfgs].filter(i => i.email !== email);
-            this.setState({tfgs: updatedTFGs});
+            let updatedusuarios = [...this.state.usuarios].filter(i => i.id !== id);
+            this.setState({usuarios: updatedusuarios});
         });
     }
 
     render() {
-        const {tfgs} = this.state;
+        const {usuarios} = this.state;
 
-        const tfgList = tfgs.map(tfg => {
-            return <tr key={tfg.email}>
-                <td style={{whiteSpace: 'nowrap'}}>{tfg.nombre}</td>
-                <td>{tfg.email}</td>
-                <td>{tfg.titulo}</td>
-                <td>{tfg.tutor}</td>
-                <td>{tfg.status}</td>
+        const usuarioList = usuarios.map(usuario => {
+            return <tr key={usuario.id}>
+                <td style={{whiteSpace: 'nowrap'}}>{usuario.email}</td>
+                <td>{usuario.contraseña}</td>
+                <td>{usuario.positivo}</td>
+                <td>{usuario.contactos}</td>
                 <td>
                     <ButtonGroup>
-                        <Button size="sm" color="primary" tag={Link} to={"/tfgs/" + tfg.email}>Edit</Button>
-                        <Button size="sm" color="danger" onClick={() => this.remove(tfg.email)}>Delete</Button>
+                        <Button size="sm" color="primary" tag={Link} to={"/usuarios/" + usuario.id}>Edit</Button>
+                        <Button size="sm" color="danger" onClick={() => this.remove(usuario.id)}>Delete</Button>
                     </ButtonGroup>
                 </td>
             </tr>
@@ -54,22 +53,21 @@ class TFGList extends Component {
                 <AppNavbar/>
                 <Container fluid>
                     <div className="float-right">
-                        <Button color="success" tag={Link} to="/tfgs/new">Add TFG</Button>
+                        <Button color="success" tag={Link} to="/usuarios/new">Add User</Button>
                     </div>
-                    <h3>TFGs</h3>
+                    <h3>Users</h3>
                     <Table className="mt-4">
                         <thead>
                         <tr>
-                            <th width="15%">Nombre</th>
+                            <th width="15%">Id</th>
                             <th width="15%">Email</th>
-                            <th width="15%">Titulo</th>
-                            <th width="15%">Tutor</th>
-                            <th width="10%">Estado</th>
-                            <th width="30%">Actions</th>
+                            <th width="15%">Contraseña</th>
+                            <th width="15%">Positivo</th>
+                            <th width="10%">Contactos</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {tfgList}
+                        {usuarioList}
                         </tbody>
                     </Table>
                 </Container>
